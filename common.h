@@ -8,12 +8,11 @@
  */
 
 #ifndef FREEBSD
-# define _POSIX_C_SOURCE 200112L
-# define _XOPEN_SOURCE  500
-#endif 
+#define _POSIX_C_SOURCE 200112L
+#define _XOPEN_SOURCE 500
+#endif
 
 #define REVSH_VERSION "1.0.4"
-
 
 /******************************************************************************
  * system headers
@@ -58,23 +57,21 @@
 
 #include <net/if.h>
 
-
 /******************************************************************************
  * OS specific headers
  ******************************************************************************/
 
 #ifdef FREEBSD
 
-# include <netinet/in.h>
+#include <netinet/in.h>
 
 #else
 
 // Linux
-# include <linux/if.h>
-# include <linux/if_tun.h>
+#include <linux/if.h>
+#include <linux/if_tun.h>
 
 #endif
-
 
 /******************************************************************************
  * revsh headers
@@ -83,10 +80,9 @@
 // This started as a much smaller project. I should go back through at some
 // point and break out this common.h header into a bunch of smaller .h files.
 
-#include "helper_objects.h"
 #include "config.h"
+#include "helper_objects.h"
 #include "protocol.h"
-
 
 /******************************************************************************
  * constant definitions
@@ -102,7 +98,7 @@
 #define EDH 2
 
 #define DEFAULT_PROXY_ADDR "127.0.0.1"
-#define DEV_NET_TUN	"/dev/net/tun"
+#define DEV_NET_TUN "/dev/net/tun"
 
 /* Connection states for proxy connections. */
 #define CON_SOCKS_INIT 0
@@ -140,7 +136,6 @@
 #define ESCAPE_CR 1
 #define ESCAPE_TILDE 2
 
-
 /******************************************************************************
  * global variables
  ******************************************************************************/
@@ -156,7 +151,8 @@ int pagesize;
 int verbose;
 struct message_helper *message;
 
-// Same with config. Once we leave main(), it is intended as a read-only resource.
+// Same with config. Once we leave main(), it is intended as a read-only
+// resource.
 struct config_helper *config;
 
 /*
@@ -208,11 +204,15 @@ int handle_proxy_read(struct proxy_node *cur_proxy_node);
 int handle_connection_write(struct connection_node *cur_connection_node);
 int handle_connection_read(struct connection_node *cur_connection_node);
 int handle_connection_socks_init(struct connection_node *cur_connection_node);
-int handle_send_dt_proxy_ht_destroy(unsigned short origin, unsigned short id, unsigned short header_errno);
+int handle_send_dt_proxy_ht_destroy(unsigned short origin, unsigned short id,
+                                    unsigned short header_errno);
 int handle_send_dt_proxy_ht_create(char *proxy_string, int proxy_type);
 int handle_send_dt_proxy_ht_report(struct proxy_node *cur_proxy_node);
-int handle_send_dt_connection_ht_destroy(unsigned short origin, unsigned short id, unsigned short header_errno);
-int handle_send_dt_connection_ht_create(struct connection_node *cur_connection_node);
+int handle_send_dt_connection_ht_destroy(unsigned short origin,
+                                         unsigned short id,
+                                         unsigned short header_errno);
+int handle_send_dt_connection_ht_create(
+    struct connection_node *cur_connection_node);
 int handle_send_dt_nop();
 struct connection_node *handle_tun_tap_init(int ifr_flag);
 
@@ -229,7 +229,7 @@ int remote_write_plaintext(void *buf, size_t count);
 int remote_read_encrypted(void *buf, size_t count);
 int remote_write_encrypted(void *buf, size_t count);
 
-int dummy_verify_callback(int preverify_ok, X509_STORE_CTX* ctx);
+int dummy_verify_callback(int preverify_ok, X509_STORE_CTX *ctx);
 #endif /* OPENSSL */
 
 /* io_nossl.c & io_ssl.c */
@@ -239,7 +239,9 @@ int init_io_target();
 /* message.c */
 int message_pull();
 int message_push();
-struct message_helper *message_helper_create(char *data, unsigned short data_len, unsigned short message_data_size);
+struct message_helper *message_helper_create(char *data,
+                                             unsigned short data_len,
+                                             unsigned short message_data_size);
 void message_helper_destroy(struct message_helper *mh);
 
 /* proxy.c */
@@ -251,7 +253,8 @@ void proxy_node_delete(struct proxy_node *);
 struct proxy_node *proxy_node_find(unsigned short origin, unsigned short id);
 struct connection_node *connection_node_create();
 void connection_node_delete(struct connection_node *);
-struct connection_node *connection_node_find(unsigned short origin, unsigned short id);
+struct connection_node *connection_node_find(unsigned short origin,
+                                             unsigned short id);
 void connection_node_queue(struct connection_node *cur_connection_node);
 int parse_socks_request(struct connection_node *cur_connection_node);
 char *addr_to_string(int atype, char *addr, char *port, int len);
@@ -266,7 +269,7 @@ int report_log_string(char *error_string);
 void clean_io();
 #ifndef FREEBSD
 int posix_openpt(int flags);
-#endif 
+#endif
 void print_config();
 
 /* string_to_vector.c */
@@ -276,4 +279,3 @@ void free_vector(char **vector);
 /* target.c */
 int do_target();
 int remote_printf(char *fmt, ...);
-
